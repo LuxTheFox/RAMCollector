@@ -1,7 +1,7 @@
 # Ram Limiter
 
 ## Description
-Limits any specified applications ram usages using Garbage Collectors (GC)
+Collects unused ram from applications using Garbage Collectors (GC)
 
 ## Use
 Frees RAM being used by all specificed applications automatically.
