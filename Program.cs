@@ -9,8 +9,6 @@ namespace RAMCollector
 {
     class Program
     {
-        static string ConfPath;
-        static List<string> processes;
 
         [DllImport("kernel32.dll")]
         static extern bool SetProcessWorkingSetSize(IntPtr proc, int min, int max);
@@ -34,9 +32,9 @@ namespace RAMCollector
             return ProcessID;
         }
 
-        public static void HandleProcesses()
+        public static void HandleProcesses(string ConfPath)
         {
-            processes = System.IO.File.ReadAllLines(ConfPath).ToList();
+            List<string> processes = System.IO.File.ReadAllLines(ConfPath).ToList();
             processes.ForEach(ProcessName =>
             {
                 new Thread(() =>
@@ -66,17 +64,15 @@ namespace RAMCollector
         static void Main(string[] args)
         {
             Console.Title = "RAM Collector By Lux";
-            string LocalConfPath = System.IO.Directory.GetParent(System.Reflection.Assembly.GetEntryAssembly().Location).ToString() + "\\RAMCollector.conf";
-            if (!System.IO.File.Exists(LocalConfPath))
+            string ConfPath = System.IO.Directory.GetParent(System.Reflection.Assembly.GetEntryAssembly().Location).ToString() + "\\RAMCollector.conf";
+            if (!System.IO.File.Exists(ConfPath))
             {
                 System.IO.File.WriteAllLines(ConfPath, new String[] { "discord", "chrome", "obs64" });
                 Console.WriteLine("Created a config file with default executables.");
                 Console.ReadLine();
                 Environment.Exit(0);
-            } else ConfPath = LocalConfPath;
-
-            processes = System.IO.File.ReadAllLines(ConfPath).ToList();
-            HandleProcesses();
+            }
+            HandleProcesses(ConfPath);
             Console.WriteLine("Press enter to hide window");
             Console.ReadLine();
             ShowWindow(GetConsoleWindow(), 0);
